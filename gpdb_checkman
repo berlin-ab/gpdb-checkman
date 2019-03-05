@@ -17,16 +17,28 @@ def main():
         pipeline_name=pipeline_name,
     ).split(" ")))
 
-    failed_lines = [line for line in lines if line['finished_build'] and line['finished_build']['status'] != 'succeeded']
+    failed_lines = [
+        line
+        for line
+        in lines
+        if (
+                line['finished_build']
+                and
+                line['finished_build']['status'] != 'succeeded'
+                and
+                line.get('paused') != True
+        )
+    ]
 
     info = []
 
     for failed_line in failed_lines:
+        sys.stderr.write(json.dumps(failed_line) + "\n")
         info.extend([failed_line['name'], failed_line['finished_build']['status']])
     
     result = {
-      "result": True,
-      "changing": True,
+      "result": len(failed_lines) == 0,
+      "changing": False,
       "url": pipeline_url,
       "info": info
     }
