@@ -12,37 +12,38 @@ def main():
     pipeline_name = sys.argv[2]
     pipeline_url = sys.argv[3]
 
-    lines = json.loads(subprocess.check_output("fly -t {target_name} jobs -p {pipeline_name} --json".format(
+    jobs = json.loads(subprocess.check_output("fly -t {target_name} jobs -p {pipeline_name} --json".format(
         target_name=target_name,
         pipeline_name=pipeline_name,
     ).split(" ")))
 
-    failed_lines = [
-        line
-        for line
-        in lines
+    failed_jobs = [
+        job
+        for job
+        in jobs
         if (
-                line['finished_build']
+                job['finished_build']
                 and
-                line['finished_build']['status'] != 'succeeded'
+                job['finished_build']['status'] != 'succeeded'
                 and
-                line.get('paused') != True
+                job.get('paused') != True
         )
     ]
 
     info = []
 
-    for failed_line in failed_lines:
-        sys.stderr.write(json.dumps(failed_line) + "\n")
-        info.extend([failed_line['name'], failed_line['finished_build']['status']])
+    for failed_job in failed_jobs:
+        sys.stderr.write(json.dumps(failed_job) + "\n")
+        info.extend([failed_job['name'], failed_job['finished_build']['status']])
+
+    running_jobs = [job for job in jobs if job.get('next_build') ]
     
     result = {
-      "result": len(failed_lines) == 0,
-      "changing": False,
+      "result": len(failed_jobs) == 0,
+      "changing": len(running_jobs) > 0,
       "url": pipeline_url,
       "info": info
     }
-
     print json.dumps(result)
 
     
