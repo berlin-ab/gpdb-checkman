@@ -2,16 +2,20 @@
 
 
 main() {
-       local checkman_dir=~/Checkman;
+    local checkman_dir=~/Checkman;
+    local checkman_install_dir=/Applications/Checkman.app/Contents/Resources/
 
-       echo "Ensure $checkman_dir exists."
-       mkdir -p $checkman_dir
 
-       echo "Place gpdb script in $checkman_dir"
-       ln -f -s ${PWD}/gpdb $checkman_dir;
+    echo "Ensure $checkman_dir exists."
+    mkdir -p $checkman_dir
+    
+    echo "Place gpdb script in $checkman_dir"
+    ln -s ${PWD}/gpdb $checkman_dir;
+    
+    echo "Link gpdb_checkman into /usr/local/bin"
+    ln -s ${PWD}/gpdb_checkman $checkman_install_dir;
+    ln -s $(which fly) $checkman_install_dir;
 
-       echo "Link gpdb_checkman into /usr/local/bin"
-       ln -f -s ${PWD}/gpdb_checkman /usr/local/bin/
 }
 
 

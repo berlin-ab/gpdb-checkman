@@ -1,1 +1,3 @@
-/Users/adamberlin/workspace/gpdb-checkman/gpdb
+gpdb_master: gpdb_checkman gpdb-prod gpdb_master https://prod.ci.gpdb.pivotal.io/teams/main/pipelines/gpdb_master
+5X_STABLE: gpdb_checkman gpdb-prod 5X_STABLE https://prod.ci.gpdb.pivotal.io/teams/main/pipelines/5X_STABLE
+4.3_STABLE: gpdb_checkman gpdb-prod 4.3_STABLE https://prod.ci.gpdb.pivotal.io/teams/main/pipelines/4.3_STABLE
